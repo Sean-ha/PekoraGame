@@ -5,12 +5,16 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     public LayerMask whatIsGround;
+    public ScoreManager scoreManager;
+    public CarrotManager carrotManager;
+    public ParticleSystem deathParticles;
+    public ParticleSystem deathParticles2;
 
     private Rigidbody2D rb;
     private Animator animator;
     private Transform overlapBoxTransform;
 
-    private float jumpForce = 9;
+    private float jumpForce = 15;
     private float jumpForceMin = 4;
 
     private bool isGrounded;
@@ -22,7 +26,7 @@ public class PlayerController : MonoBehaviour
         overlapBoxTransform = transform.Find("BoxOverlap");
     }
 
-    void Update()
+    private void Update()
     {
         float horizontalInput = Input.GetAxisRaw("Horizontal");
         rb.velocity = new Vector2(horizontalInput * 4, rb.velocity.y);
@@ -66,5 +70,52 @@ public class PlayerController : MonoBehaviour
     private void Jump()
     {
         rb.velocity = new Vector2(0, jumpForce);
+    }
+
+    private void Die()
+    {
+        scoreManager.StopScoring();
+
+        deathParticles.transform.parent = null;
+        deathParticles.Play();
+        deathParticles2.transform.parent = null;
+        deathParticles2.Play();
+        Destroy(deathParticles, 6);
+
+        // Stops all platform movement
+        Rigidbody2D[] allRB = FindObjectsOfType<Rigidbody2D>();
+        foreach(Rigidbody2D rigidBody in allRB)
+        {
+            rigidBody.velocity = new Vector2(0, 0);
+        }
+        Destroy(gameObject);
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        // If the player collides with an enemy
+        if(collision.gameObject.layer == 9)
+        {
+            Die();
+        }
+        // If the player collides with a corrupt carrot, destroy it and then die.
+        else if(collision.gameObject.layer == 10)
+        {
+            Destroy(collision.gameObject);
+            Die();
+        }
+        // If the player collides with a carrot
+        else if(collision.gameObject.layer == 12)
+        {
+            carrotManager.AcquireCarrot();
+            Destroy(collision.gameObject);
+            // TODO: Collecting carrots
+        }
+        // If the player collides with a golden carrot
+        else if(collision.gameObject.layer == 13)
+        {
+            carrotManager.AcquireGoldenCarrot();
+            Destroy(collision.gameObject);
+        }
     }
 }
