@@ -9,13 +9,14 @@ public class PlayerController : MonoBehaviour
     public CarrotManager carrotManager;
     public ParticleSystem deathParticles;
     public ParticleSystem deathParticles2;
+    public TerrainSpawner terrainSpawner;
 
     private Rigidbody2D rb;
     private Animator animator;
     private Transform overlapBoxTransform;
 
-    private float jumpForce = 15;
-    private float jumpForceMin = 4;
+    private float jumpForce = 20;
+    private float jumpForceMin = 6;
 
     private bool isGrounded;
 
@@ -83,11 +84,8 @@ public class PlayerController : MonoBehaviour
         Destroy(deathParticles, 6);
 
         // Stops all platform movement
-        Rigidbody2D[] allRB = FindObjectsOfType<Rigidbody2D>();
-        foreach(Rigidbody2D rigidBody in allRB)
-        {
-            rigidBody.velocity = new Vector2(0, 0);
-        }
+        terrainSpawner.StopPlatforms();
+
         Destroy(gameObject);
     }
 
@@ -109,7 +107,6 @@ public class PlayerController : MonoBehaviour
         {
             carrotManager.AcquireCarrot();
             Destroy(collision.gameObject);
-            // TODO: Collecting carrots
         }
         // If the player collides with a golden carrot
         else if(collision.gameObject.layer == 13)

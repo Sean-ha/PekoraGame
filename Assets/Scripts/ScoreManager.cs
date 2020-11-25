@@ -26,7 +26,7 @@ public class ScoreManager : MonoBehaviour
     {
         if(isScoring)
         {
-            score += -terrainSpawner.GetMoveSpeed()/10;
+            score += Mathf.Pow(terrainSpawner.GetMoveSpeed(), 2)/100;
             scoreText.text = Mathf.Floor(score).ToString();
         }
     }
