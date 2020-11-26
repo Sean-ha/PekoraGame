@@ -11,5 +11,9 @@ public class TerrainDestroyer : MonoBehaviour
         {
             Destroy(collision.transform.parent.gameObject);
         }
+        else if(collision.gameObject.layer == 14)
+        {
+            Destroy(collision.transform.gameObject);
+        }
     }
 }

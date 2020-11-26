@@ -19,8 +19,8 @@ TagManager:
   - Platform
   - Carrot
   - GoldenCarrot
-  - 
-  - 
+  - Background
+  - TerrainDestroyer
   - 
   - 
   - 
@@ -38,6 +38,9 @@ TagManager:
   - 
   - 
   m_SortingLayers:
+  - name: Background
+    uniqueID: 1392736619
+    locked: 0
   - name: Default
     uniqueID: 0
     locked: 0

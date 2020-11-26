@@ -8,10 +8,18 @@ public class TerrainSpawner : MonoBehaviour
 
     public GameObject startPlatform;
     public List<GameObject> platforms;
+    public List<GameObject> buffNousagiPlatforms;
+
+    public GameObject startPicture;
+    public GameObject pictureToSpawn;
 
     private Transform lastEndPosition;
     public Transform currentTerrainParent;
     private Rigidbody2D currentRB;
+
+    private Transform pictureEndPosition;
+    public Transform currentPictureParent;
+    private Rigidbody2D currentPictureRB;
 
     private float moveSpeed = -6;
     private float maxMoveSpeed = -14;
@@ -19,7 +27,9 @@ public class TerrainSpawner : MonoBehaviour
     private void Awake()
     {
         lastEndPosition = startPlatform.transform.Find("End");
+        pictureEndPosition = startPicture.transform.Find("End");
         currentRB = currentTerrainParent.GetComponent<Rigidbody2D>();
+        currentPictureRB = currentPictureParent.GetComponent<Rigidbody2D>();
     }
 
     private void Start()
@@ -27,17 +37,24 @@ public class TerrainSpawner : MonoBehaviour
         SpawnPlatform();
         startPlatform.transform.parent = currentTerrainParent;
         currentRB.velocity = new Vector2(moveSpeed, 0);
+        currentPictureRB.velocity = new Vector2(moveSpeed / 32, 0);
 
         InvokeRepeating("IncreaseSpeed", 1, 1);
-        // Invoke("AddBuffNousagi", 45);
+        // Invoke("AddBuffNousagi", 30);
     }
 
     private void Update()
     {
         currentRB.velocity = new Vector2(moveSpeed, 0);
-        if(lastEndPosition.position.x < DISTANCE_TO_SPAWN)
+        currentPictureRB.velocity = new Vector2(moveSpeed / 32, 0);
+
+        if (lastEndPosition.position.x < DISTANCE_TO_SPAWN)
         {
             SpawnPlatform();
+        }
+        if(pictureEndPosition.position.x < DISTANCE_TO_SPAWN)
+        {
+            SpawnPicture();
         }
     }
 
@@ -50,6 +67,14 @@ public class TerrainSpawner : MonoBehaviour
         lastEndPosition = newSpawned.transform.Find("End");
     }
 
+    // Creates a picture in the proper location.
+    private void SpawnPicture()
+    {
+        GameObject newSpawned = Instantiate(pictureToSpawn, pictureEndPosition.position, Quaternion.identity);
+        newSpawned.transform.parent = currentPictureParent;
+        pictureEndPosition = newSpawned.transform.Find("End");
+    }
+
     // Called every frame. This increases the speed of the platforms moving
     private void IncreaseSpeed()
     {
@@ -58,6 +83,11 @@ public class TerrainSpawner : MonoBehaviour
         {
             CancelInvoke();
         }
+    }
+
+    private void AddBuffNousagi()
+    {
+
     }
 
     public float GetMoveSpeed()

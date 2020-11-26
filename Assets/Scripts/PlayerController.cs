@@ -77,6 +77,8 @@ public class PlayerController : MonoBehaviour
     {
         scoreManager.StopScoring();
 
+        CameraShake.instance.ShakeCamera(6, 0.6f);
+
         deathParticles.transform.parent = null;
         deathParticles.Play();
         deathParticles2.transform.parent = null;
@@ -100,18 +102,21 @@ public class PlayerController : MonoBehaviour
         else if(collision.gameObject.layer == 10)
         {
             Destroy(collision.gameObject);
+            SoundManager.instance.PlaySound(SoundManager.Sound.CarrotPickUp);
             Die();
         }
         // If the player collides with a carrot
         else if(collision.gameObject.layer == 12)
         {
             carrotManager.AcquireCarrot();
+            SoundManager.instance.PlaySound(SoundManager.Sound.CarrotPickUp);
             Destroy(collision.gameObject);
         }
         // If the player collides with a golden carrot
         else if(collision.gameObject.layer == 13)
         {
             carrotManager.AcquireGoldenCarrot();
+            SoundManager.instance.PlaySound(SoundManager.Sound.GoldenCarrot);
             Destroy(collision.gameObject);
         }
     }
