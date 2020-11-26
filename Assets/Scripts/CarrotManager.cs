@@ -8,6 +8,8 @@ public class CarrotManager : MonoBehaviour
     public Text carrotText;
     public Animator carrotUIAnimator;
 
+    public bool mainMenu;
+
     private ScoreManager scoreManager;
 
     private int carrotCount;
@@ -19,8 +21,11 @@ public class CarrotManager : MonoBehaviour
 
     private void Start()
     {
-        carrotCount = 0;
-        carrotText.text = carrotCount.ToString();
+        if(!mainMenu)
+        {
+            carrotCount = 0;
+            carrotText.text = carrotCount.ToString();
+        }
     }
 
     public void AcquireCarrot()

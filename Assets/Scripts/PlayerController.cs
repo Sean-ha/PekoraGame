@@ -19,6 +19,9 @@ public class PlayerController : MonoBehaviour
     private float jumpForceMin = 6;
 
     private bool isGrounded;
+    [HideInInspector]
+    public bool canJump;
+    private bool isPaused;
 
     private void Awake()
     {
@@ -29,11 +32,11 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
-        float horizontalInput = Input.GetAxisRaw("Horizontal");
-        rb.velocity = new Vector2(horizontalInput * 4, rb.velocity.y);
-
         CheckGrounded();
-        CheckInput();
+        if(canJump)
+        {
+            CheckInput();
+        }
 
         animator.SetFloat("VerticalSpeed", rb.velocity.y);
     }
@@ -64,6 +67,17 @@ public class PlayerController : MonoBehaviour
         else if(Input.GetKeyUp(KeyCode.Space) && rb.velocity.y > jumpForceMin)
         {
             rb.velocity = new Vector2(0, jumpForceMin);
+        }
+        else if(Input.GetKeyDown(KeyCode.Escape))
+        {
+            if(isPaused)
+            {
+                UnpauseGame();
+            }
+            else
+            {
+                PauseGame();
+            }
         }
     }
 
@@ -123,5 +137,19 @@ public class PlayerController : MonoBehaviour
             SoundManager.instance.PlaySound(SoundManager.Sound.GoldenCarrot);
             Destroy(collision.gameObject);
         }
+    }
+
+    private void PauseGame()
+    {
+        isPaused = true;
+        scoreManager.StopScoring();
+        Time.timeScale = 0;
+    }
+
+    private void UnpauseGame()
+    {
+        isPaused = false;
+        scoreManager.StartScoring();
+        Time.timeScale = 1;
     }
 }

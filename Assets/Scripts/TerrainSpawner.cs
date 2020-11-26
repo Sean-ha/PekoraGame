@@ -13,6 +13,10 @@ public class TerrainSpawner : MonoBehaviour
     public GameObject startPicture;
     public GameObject pictureToSpawn;
 
+    public GameObject player;
+
+    public bool mainMenu;
+
     private Transform lastEndPosition;
     public Transform currentTerrainParent;
     private Rigidbody2D currentRB;
@@ -21,7 +25,7 @@ public class TerrainSpawner : MonoBehaviour
     public Transform currentPictureParent;
     private Rigidbody2D currentPictureRB;
 
-    private float moveSpeed = -6;
+    private float moveSpeed = 0;
     private float maxMoveSpeed = -14;
 
     private void Awake()
@@ -35,12 +39,14 @@ public class TerrainSpawner : MonoBehaviour
     private void Start()
     {
         SpawnPlatform();
-        startPlatform.transform.parent = currentTerrainParent;
-        currentRB.velocity = new Vector2(moveSpeed, 0);
-        currentPictureRB.velocity = new Vector2(moveSpeed / 32, 0);
-
-        InvokeRepeating("IncreaseSpeed", 1, 1);
-        // Invoke("AddBuffNousagi", 30);
+        if(mainMenu)
+        {
+            BeginMoving();
+        } 
+        else
+        {
+            StartCoroutine(RunUp());
+        }
     }
 
     private void Update()
@@ -55,6 +61,36 @@ public class TerrainSpawner : MonoBehaviour
         if(pictureEndPosition.position.x < DISTANCE_TO_SPAWN)
         {
             SpawnPicture();
+        }
+    }
+
+    private IEnumerator RunUp()
+    {
+        yield return new WaitForSeconds(1.3f);
+        LeanTween.move(player, new Vector3(-5.8f, player.transform.position.y, 0), 1f).setOnComplete(BeginMoving);
+    }
+
+    private void BeginMoving()
+    {
+        moveSpeed = -6;
+
+        if(!mainMenu)
+        {
+            player.GetComponent<PlayerController>().canJump = true;
+        }
+
+        startPlatform.transform.parent = currentTerrainParent;
+        currentRB.velocity = new Vector2(moveSpeed, 0);
+        currentPictureRB.velocity = new Vector2(moveSpeed / 32, 0);
+
+        if (!mainMenu)
+        {
+            InvokeRepeating("IncreaseSpeed", 1, 1);
+            // Invoke("AddBuffNousagi", 30);
+        }
+        else
+        {
+            moveSpeed = -3;
         }
     }
 

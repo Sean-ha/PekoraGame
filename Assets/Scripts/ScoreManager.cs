@@ -4,8 +4,11 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class ScoreManager : MonoBehaviour
-{
+{  
     public Text scoreText;
+
+    public bool mainMenu;
+
     private TerrainSpawner terrainSpawner;
 
     private float score;
@@ -18,8 +21,11 @@ public class ScoreManager : MonoBehaviour
 
     private void Start()
     {
-        scoreText.text = "0";
-        StartScoring();
+        if(!mainMenu)
+        {
+            scoreText.text = "0";
+            StartScoring();
+        }
     }
 
     void Update()
