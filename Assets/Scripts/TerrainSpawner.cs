@@ -13,7 +13,7 @@ public class TerrainSpawner : MonoBehaviour
     public Transform currentTerrainParent;
     private Rigidbody2D currentRB;
 
-    private float moveSpeed = -5;
+    private float moveSpeed = -6;
     private float maxMoveSpeed = -14;
 
     private void Awake()

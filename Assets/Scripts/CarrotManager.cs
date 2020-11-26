@@ -8,7 +8,14 @@ public class CarrotManager : MonoBehaviour
     public Text carrotText;
     public Animator carrotUIAnimator;
 
+    private ScoreManager scoreManager;
+
     private int carrotCount;
+
+    private void Awake()
+    {
+        scoreManager = GetComponent<ScoreManager>();
+    }
 
     private void Start()
     {
@@ -21,6 +28,7 @@ public class CarrotManager : MonoBehaviour
         carrotCount += 1;
         carrotText.text = carrotCount.ToString();
         carrotUIAnimator.Play("CarrotUI");
+        scoreManager.GainScore(5);
     }
 
     public void AcquireGoldenCarrot()
@@ -28,5 +36,6 @@ public class CarrotManager : MonoBehaviour
         carrotCount += 20;
         carrotText.text = carrotCount.ToString();
         carrotUIAnimator.Play("CarrotUI");
+        scoreManager.GainScore(100);
     }
 }

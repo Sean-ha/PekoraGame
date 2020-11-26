@@ -41,4 +41,9 @@ public class ScoreManager : MonoBehaviour
     {
         isScoring = false;
     }
+
+    public void GainScore(float gained)
+    {
+        score += gained;
+    }
 }
