@@ -70,12 +70,16 @@ public class PlayerController : MonoBehaviour
     // Initiates player jump
     private void Jump()
     {
+        SoundManager.instance.PlaySound(SoundManager.Sound.Jump);
         rb.velocity = new Vector2(0, jumpForce);
     }
 
     private void Die()
     {
         scoreManager.StopScoring();
+
+        SoundManager.instance.PlaySound(SoundManager.Sound.Death);
+        SoundManager.instance.PlaySound(SoundManager.Sound.Laugh);
 
         CameraShake.instance.ShakeCamera(6, 0.6f);
 

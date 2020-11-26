@@ -9,7 +9,10 @@ public class SoundManager : MonoBehaviour
     public enum Sound
     {
         CarrotPickUp,
-        GoldenCarrot
+        GoldenCarrot,
+        Death,
+        Laugh,
+        Jump
     }
 
     [System.Serializable]
