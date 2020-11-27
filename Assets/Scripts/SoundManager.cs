@@ -12,7 +12,8 @@ public class SoundManager : MonoBehaviour
         GoldenCarrot,
         Death,
         Laugh,
-        Jump
+        Jump,
+        Click
     }
 
     [System.Serializable]
@@ -47,6 +48,7 @@ public class SoundManager : MonoBehaviour
         {
             dict[clip.sound] = new GameObject("Sound").AddComponent<AudioSource>();
             DontDestroyOnLoad(dict[clip.sound]);
+            dict[clip.sound].tag = "SoundEffect";
             dict[clip.sound].clip = clip.audioClip;
         }
     }

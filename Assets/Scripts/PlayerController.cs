@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
@@ -10,6 +11,10 @@ public class PlayerController : MonoBehaviour
     public ParticleSystem deathParticles;
     public ParticleSystem deathParticles2;
     public TerrainSpawner terrainSpawner;
+    public Image blackScreen;
+    public RectTransform retryButton;
+    public RectTransform mainMenuButton;
+    public Text deathScoreText;
 
     private Rigidbody2D rb;
     private Animator animator;
@@ -106,7 +111,20 @@ public class PlayerController : MonoBehaviour
         // Stops all platform movement
         terrainSpawner.StopPlatforms();
 
-        Destroy(gameObject);
+        float score = scoreManager.GetScore();
+
+        // Saves the stats from the run
+        PlayerPrefs.SetInt("HighScore", Mathf.FloorToInt(Mathf.Max(score, PlayerPrefs.GetFloat("HighScore"))));
+        PlayerPrefs.SetInt("TotalCarrots", PlayerPrefs.GetInt("TotalCarrots") + carrotManager.GetCarrotCount());
+        PlayerPrefs.SetInt("TotalRuns", PlayerPrefs.GetInt("TotalRuns", 0) + 1);
+        PlayerPrefs.SetFloat("TotalDistance", PlayerPrefs.GetFloat("TotalDistance", 0) + score / 1000);
+
+        StartCoroutine(FadeDeath());
+
+        canJump = false;
+        gameObject.GetComponent<SpriteRenderer>().enabled = false;
+        gameObject.GetComponent<BoxCollider2D>().enabled = false;
+        rb.gravityScale = 0;
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -151,5 +169,25 @@ public class PlayerController : MonoBehaviour
         isPaused = false;
         scoreManager.StartScoring();
         Time.timeScale = 1;
+    }
+
+    private IEnumerator FadeDeath()
+    {
+        yield return new WaitForSeconds(1.5f);
+        LeanTween.alpha(blackScreen.rectTransform, 1, 1).setOnComplete(DeathMenu);
+        deathScoreText.text = "SCORE:\n" + Mathf.FloorToInt(scoreManager.GetScore());
+        LeanTween.alphaText(deathScoreText.rectTransform, 1, 1);
+    }
+
+    private void DeathMenu()
+    {
+        retryButton.gameObject.SetActive(true);
+        mainMenuButton.gameObject.SetActive(true);
+
+        retryButton.GetComponent<Button>().interactable = true;
+        mainMenuButton.GetComponent<Button>().interactable = true;
+
+        LeanTween.alpha(retryButton, 1, 0.5f);
+        LeanTween.alpha(mainMenuButton, 1, 0.5f);
     }
 }

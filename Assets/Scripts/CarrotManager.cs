@@ -43,4 +43,9 @@ public class CarrotManager : MonoBehaviour
         carrotUIAnimator.Play("CarrotUI");
         scoreManager.GainScore(100);
     }
+
+    public int GetCarrotCount()
+    {
+        return carrotCount;
+    }
 }

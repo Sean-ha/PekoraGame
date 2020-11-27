@@ -10,12 +10,6 @@ public class BlackScreen : MonoBehaviour
     private void Start()
     {
         LeanTween.alpha(blackScreen.rectTransform, 1, 0);
-        LeanTween.alpha(blackScreen.rectTransform, 0, .75f).setOnComplete(DisableThis);
-    }
-
-    private void DisableThis()
-    {
-        blackScreen.gameObject.SetActive(false);
-
+        LeanTween.alpha(blackScreen.rectTransform, 0, .75f);
     }
 }

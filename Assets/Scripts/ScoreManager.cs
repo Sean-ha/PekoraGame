@@ -52,4 +52,9 @@ public class ScoreManager : MonoBehaviour
     {
         score += gained;
     }
+
+    public float GetScore()
+    {
+        return score;
+    }
 }

@@ -66,7 +66,7 @@ public class TerrainSpawner : MonoBehaviour
 
     private IEnumerator RunUp()
     {
-        yield return new WaitForSeconds(1.3f);
+        yield return new WaitForSeconds(.7f);
         LeanTween.move(player, new Vector3(-5.8f, player.transform.position.y, 0), 1f).setOnComplete(BeginMoving);
     }
 
