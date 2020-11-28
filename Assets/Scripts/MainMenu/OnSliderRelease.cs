@@ -7,6 +7,6 @@ public class OnSliderRelease : MonoBehaviour, IPointerUpHandler
 {
     public void OnPointerUp(PointerEventData eventData)
     {
-        SoundManager.instance.PlaySound(SoundManager.Sound.CarrotPickUp);
+        SoundManager.instance.PlaySound(SoundManager.Sound.Peko1);
     }
 }

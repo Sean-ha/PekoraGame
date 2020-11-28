@@ -32,7 +32,7 @@ public class ScoreManager : MonoBehaviour
     {
         if(isScoring)
         {
-            score += Mathf.Pow(terrainSpawner.GetMoveSpeed(), 2)/100;
+            score += Mathf.Pow(-terrainSpawner.GetMoveSpeed(), 2) * Time.deltaTime;
             scoreText.text = Mathf.Floor(score).ToString();
         }
     }

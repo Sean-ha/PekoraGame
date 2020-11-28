@@ -13,7 +13,19 @@ public class SoundManager : MonoBehaviour
         Death,
         Laugh,
         Jump,
-        Click
+        Click,
+        ItsMePekora,
+        Konpeko,
+        LetsGo,
+        Laugh2,
+        Ikuyo,
+        Shout,
+        Pekopeko,
+        Peko1,
+        Peko2,
+        Peko3,
+        Peko4,
+        Peko5
     }
 
     [System.Serializable]

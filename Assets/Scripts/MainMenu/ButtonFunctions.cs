@@ -6,9 +6,11 @@ using UnityEngine.SceneManagement;
 
 public class ButtonFunctions : MonoBehaviour
 {
+    public ScoreManager scoreManager;
     public Image blackScreen;
     public Image optionsPanel;
     public Image statsPanel;
+    public bool mainMenu;
 
     private AudioSource bgmSource;
     private Button[] buttons;
@@ -21,17 +23,15 @@ public class ButtonFunctions : MonoBehaviour
 
     private void Update()
     {
-        if(Input.GetKeyDown(KeyCode.Escape))
+        if(Input.GetKeyDown(KeyCode.Escape) && mainMenu)
         {
             if(optionsPanel.gameObject.activeInHierarchy)
             {
-                SoundManager.instance.PlaySound(SoundManager.Sound.Click);
-                optionsPanel.gameObject.SetActive(false);
+                CloseOptions();
             }
             else if(statsPanel.gameObject.activeInHierarchy)
             {
-                SoundManager.instance.PlaySound(SoundManager.Sound.Click);
-                statsPanel.gameObject.SetActive(false);
+                CloseStats();
             }
         }
     }
@@ -46,7 +46,17 @@ public class ButtonFunctions : MonoBehaviour
 
     public void PressPlayButton()
     {
-        SoundManager.instance.PlaySound(SoundManager.Sound.Click);
+        // SoundManager.instance.PlaySound(SoundManager.Sound.Click);
+
+        int rand = Random.Range(0, 2);
+        if(rand == 0)
+        {
+            SoundManager.instance.PlaySound(SoundManager.Sound.LetsGo);
+        }
+        else if(rand == 1)
+        {
+            SoundManager.instance.PlaySound(SoundManager.Sound.Ikuyo);
+        }
         DisableButtons();
         LeanTween.alpha(blackScreen.rectTransform, 1, .75f).setOnComplete(GoToGameScene);
         StartCoroutine(FadeOut(bgmSource, 0.75f));
@@ -77,13 +87,15 @@ public class ButtonFunctions : MonoBehaviour
 
     public void PressOptionsButton()
     {
-        SoundManager.instance.PlaySound(SoundManager.Sound.Click);
+        SoundManager.instance.PlaySound(SoundManager.Sound.Pekopeko);
+        //SoundManager.instance.PlaySound(SoundManager.Sound.Click);
         optionsPanel.gameObject.SetActive(true);
     }
 
     public void PressStatsButton()
     {
-        SoundManager.instance.PlaySound(SoundManager.Sound.Click);
+        SoundManager.instance.PlaySound(SoundManager.Sound.Peko4);
+        //SoundManager.instance.PlaySound(SoundManager.Sound.Click);
         statsPanel.gameObject.SetActive(true);
     }
 
@@ -91,13 +103,38 @@ public class ButtonFunctions : MonoBehaviour
     {
         DisableButtons();
         LeanTween.alpha(blackScreen.rectTransform, 1, .75f).setOnComplete(GoToGameScene);
-        SoundManager.instance.PlaySound(SoundManager.Sound.Click);
+        SoundManager.instance.PlaySound(SoundManager.Sound.Peko5);
     }
 
     public void PressMainMenuButton()
     {
         DisableButtons();
         LeanTween.alpha(blackScreen.rectTransform, 1, .75f).setOnComplete(GoToMainMenu);
+        SoundManager.instance.PlaySound(SoundManager.Sound.Pekopeko);
+    }
+
+    public void OpenLinkJSPlugin()
+    {
+        #if !UNITY_EDITOR
+		openWindow("https://twitter.com/intent/tweet?text=Scored " + Mathf.FloorToInt(scoreManager.GetScore()) +
+            " points in the game 'Return To Pekoland'!%0a" +
+            "%23ReturnToPekoland%0a" +
+            "https://seanshome.itch.io/return-to-pekoland %0a");
+        #endif
+    }
+
+    [System.Runtime.InteropServices.DllImport("__Internal")]
+    private static extern void openWindow(string url);
+
+    public void CloseOptions()
+    {
         SoundManager.instance.PlaySound(SoundManager.Sound.Click);
+        optionsPanel.gameObject.SetActive(false);
+    }
+
+    public void CloseStats()
+    {
+        SoundManager.instance.PlaySound(SoundManager.Sound.Click);
+        statsPanel.gameObject.SetActive(false);
     }
 }

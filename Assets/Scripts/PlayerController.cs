@@ -14,7 +14,10 @@ public class PlayerController : MonoBehaviour
     public Image blackScreen;
     public RectTransform retryButton;
     public RectTransform mainMenuButton;
+    public RectTransform tweetButton;
     public Text deathScoreText;
+    public RectTransform highScore;
+    public ParticleSystem highScoreParticles;
 
     private Rigidbody2D rb;
     private Animator animator;
@@ -98,7 +101,20 @@ public class PlayerController : MonoBehaviour
         scoreManager.StopScoring();
 
         SoundManager.instance.PlaySound(SoundManager.Sound.Death);
-        SoundManager.instance.PlaySound(SoundManager.Sound.Laugh);
+
+        int rand = Random.Range(0, 3);
+        if(rand == 0)
+        {
+            SoundManager.instance.PlaySound(SoundManager.Sound.Laugh);
+        }
+        else if(rand == 1)
+        {
+            SoundManager.instance.PlaySound(SoundManager.Sound.Laugh2);
+        }
+        else if(rand == 2)
+        {
+            SoundManager.instance.PlaySound(SoundManager.Sound.Shout);
+        }
 
         CameraShake.instance.ShakeCamera(6, 0.6f);
 
@@ -113,8 +129,14 @@ public class PlayerController : MonoBehaviour
 
         float score = scoreManager.GetScore();
 
+        int newScore = Mathf.FloorToInt(score);
+
         // Saves the stats from the run
-        PlayerPrefs.SetInt("HighScore", Mathf.FloorToInt(Mathf.Max(score, PlayerPrefs.GetFloat("HighScore"))));
+        if(newScore > PlayerPrefs.GetInt("HighScore"))
+        {
+            PlayerPrefs.SetInt("HighScore", newScore);
+            StartCoroutine(HighScorePopup());
+        }
         PlayerPrefs.SetInt("TotalCarrots", PlayerPrefs.GetInt("TotalCarrots") + carrotManager.GetCarrotCount());
         PlayerPrefs.SetInt("TotalRuns", PlayerPrefs.GetInt("TotalRuns", 0) + 1);
         PlayerPrefs.SetFloat("TotalDistance", PlayerPrefs.GetFloat("TotalDistance", 0) + score / 1000);
@@ -183,11 +205,28 @@ public class PlayerController : MonoBehaviour
     {
         retryButton.gameObject.SetActive(true);
         mainMenuButton.gameObject.SetActive(true);
+        tweetButton.gameObject.SetActive(true);
 
         retryButton.GetComponent<Button>().interactable = true;
         mainMenuButton.GetComponent<Button>().interactable = true;
+        tweetButton.GetComponent<Button>().interactable = true;
 
         LeanTween.alpha(retryButton, 1, 0.5f);
         LeanTween.alpha(mainMenuButton, 1, 0.5f);
+        LeanTween.alpha(tweetButton, 1, 0.5f);
+    }
+
+    private IEnumerator HighScorePopup()
+    {
+        yield return new WaitForSeconds(2.5f);
+        highScore.GetComponent<Image>().enabled = true;
+        LeanTween.scale(highScore, new Vector3(0, 0, 1), 0);
+        LeanTween.scale(highScore, new Vector3(1.6f, 1.6f, 1), .15f).setOnComplete(RecedeHighScore);
+        highScoreParticles.Play();
+    }
+
+    private void RecedeHighScore()
+    {
+        LeanTween.scale(highScore, new Vector3(1.5f, 1.5f, 1), .05f);
     }
 }
