@@ -6,11 +6,14 @@ using UnityEngine.SceneManagement;
 
 public class ButtonFunctions : MonoBehaviour
 {
+    public PlayerController pc;
     public ScoreManager scoreManager;
     public Image blackScreen;
     public Image optionsPanel;
     public Image statsPanel;
+    public Image aboutPanel;
     public bool mainMenu;
+    public List<Button> pauseButtons;
 
     private AudioSource bgmSource;
     private Button[] buttons;
@@ -25,7 +28,11 @@ public class ButtonFunctions : MonoBehaviour
     {
         if(Input.GetKeyDown(KeyCode.Escape) && mainMenu)
         {
-            if(optionsPanel.gameObject.activeInHierarchy)
+            if(aboutPanel.gameObject.activeInHierarchy)
+            {
+                CloseAbout();
+            }
+            else if(optionsPanel.gameObject.activeInHierarchy)
             {
                 CloseOptions();
             }
@@ -136,5 +143,46 @@ public class ButtonFunctions : MonoBehaviour
     {
         SoundManager.instance.PlaySound(SoundManager.Sound.Click);
         statsPanel.gameObject.SetActive(false);
+    }
+
+    public void OpenAboutPanel()
+    {
+        SoundManager.instance.PlaySound(SoundManager.Sound.Peko4);
+        aboutPanel.gameObject.SetActive(true);
+    }
+
+    public void CloseAbout()
+    {
+        SoundManager.instance.PlaySound(SoundManager.Sound.Click);
+        aboutPanel.gameObject.SetActive(false);
+    }
+
+    public void OpenTwitterProfile()
+    {
+        #if !UNITY_EDITOR
+		openWindow("https://twitter.com/SeansHome");
+        #endif
+    }
+
+    public void LaughButton()
+    {
+        SoundManager.instance.PlaySound(SoundManager.Sound.Click);
+        SoundManager.instance.PlaySound(SoundManager.Sound.Laugh);
+    }
+
+    public void PressExitButton()
+    {
+        pc.SetClosingPauseMenu(true);
+        foreach (Button b in pauseButtons)
+        {
+            b.interactable = false;
+        }
+        SoundManager.instance.PlaySound(SoundManager.Sound.Click);
+        LeanTween.alpha(blackScreen.rectTransform, 1, 0.5f).setIgnoreTimeScale(true).setOnComplete(GoToMainMenuAndResume);
+        void GoToMainMenuAndResume()
+        {
+            Time.timeScale = 1;
+            SceneManager.LoadScene(0);
+        }
     }
 }

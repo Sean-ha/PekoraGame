@@ -18,6 +18,9 @@ public class PlayerController : MonoBehaviour
     public Text deathScoreText;
     public RectTransform highScore;
     public ParticleSystem highScoreParticles;
+    public GameObject pausePanel;
+    public RectTransform pauseMenu;
+    public List<Button> pauseButtons;
 
     private Rigidbody2D rb;
     private Animator animator;
@@ -30,6 +33,7 @@ public class PlayerController : MonoBehaviour
     [HideInInspector]
     public bool canJump;
     private bool isPaused;
+    private bool isClosingPause;
 
     private void Awake()
     {
@@ -68,22 +72,23 @@ public class PlayerController : MonoBehaviour
     // Checks if the player pressed Space for jumping. Called every frame.
     private void CheckInput()
     {
-        if(Input.GetKeyDown(KeyCode.Space) && isGrounded)
+        if(Input.GetKeyDown(KeyCode.Space) && isGrounded && !isPaused && !isClosingPause)
         {
             Jump();
         }
-        else if(Input.GetKeyUp(KeyCode.Space) && rb.velocity.y > jumpForceMin)
+        else if(Input.GetKeyUp(KeyCode.Space) && rb.velocity.y > jumpForceMin && !isPaused && !isClosingPause)
         {
             rb.velocity = new Vector2(0, jumpForceMin);
         }
         else if(Input.GetKeyDown(KeyCode.Escape))
         {
-            if(isPaused)
+            if(isPaused && !isClosingPause)
             {
                 UnpauseGame();
             }
-            else
+            else if(!isPaused && !isClosingPause)
             {
+                SoundManager.instance.PlaySound(SoundManager.Sound.Peko4);
                 PauseGame();
             }
         }
@@ -184,13 +189,49 @@ public class PlayerController : MonoBehaviour
         isPaused = true;
         scoreManager.StopScoring();
         Time.timeScale = 0;
+
+        pausePanel.SetActive(true);
+
+        // Tweens to animate the pause menu appearing
+        LeanTween.scale(pauseMenu, new Vector3(0, 0, 1), 0);
+        LeanTween.scale(pauseMenu, new Vector3(1.2f, 1.2f, 1), 0.1f).setIgnoreTimeScale(true).setOnComplete(RecedePauseMenu);
+        void RecedePauseMenu()
+        {
+            LeanTween.scale(pauseMenu, new Vector3(1, 1, 1), 0.05f).setIgnoreTimeScale(true).setOnComplete(ActivateButtons);
+        }
+        void ActivateButtons()
+        {
+            foreach(Button b in pauseButtons)
+            {
+                b.interactable = true;
+            }
+        }
     }
 
-    private void UnpauseGame()
+    public void UnpauseGame()
     {
-        isPaused = false;
-        scoreManager.StartScoring();
-        Time.timeScale = 1;
+        SoundManager.instance.PlaySound(SoundManager.Sound.Click);
+
+        isClosingPause = true;
+        foreach(Button b in pauseButtons)
+        {
+            b.interactable = false;
+        }
+        LeanTween.scale(pauseMenu, new Vector3(0, 0, 1), 0.3f).setIgnoreTimeScale(true).setOnComplete(Resume);
+
+        void Resume()
+        {
+            pausePanel.SetActive(false);
+            isPaused = false;
+            isClosingPause = false;
+            scoreManager.StartScoring();
+            Time.timeScale = 1;
+        }
+    }
+
+    public void SetClosingPauseMenu(bool to)
+    {
+        isClosingPause = to;
     }
 
     private IEnumerator FadeDeath()

@@ -27,7 +27,7 @@ public class MenuBGM : MonoBehaviour
 
     private IEnumerator StartMusic()
     {
-        yield return new WaitForSeconds(.6f);
+        yield return new WaitForSecondsRealtime(.6f);
         bgmSource.Play();
     }
 }

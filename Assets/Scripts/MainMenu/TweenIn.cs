@@ -32,7 +32,7 @@ public class TweenIn : MonoBehaviour
 
     private IEnumerator BeginButtonFade()
     {
-        yield return new WaitForSeconds(.6f);
+        yield return new WaitForSecondsRealtime(.6f);
         LeanTween.alpha(GetComponent<RectTransform>(), 1, .6f).setOnComplete(ActivateButton);
     }
 
