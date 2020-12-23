@@ -3172,12 +3172,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 94853088f7da6584e9d1cfd1da19f2fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  pc: {fileID: 0}
   scoreManager: {fileID: 0}
   blackScreen: {fileID: 1320230494}
   optionsPanel: {fileID: 235686311}
   statsPanel: {fileID: 1752870483}
   aboutPanel: {fileID: 372328051}
   mainMenu: 1
+  pauseButtons: []
 --- !u!114 &1331017281
 MonoBehaviour:
   m_ObjectHideFlags: 0

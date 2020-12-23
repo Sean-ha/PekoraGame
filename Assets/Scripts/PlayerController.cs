@@ -21,6 +21,7 @@ public class PlayerController : MonoBehaviour
     public GameObject pausePanel;
     public RectTransform pauseMenu;
     public List<Button> pauseButtons;
+    public Image optionsPanel;
 
     private Rigidbody2D rb;
     private Animator animator;
@@ -28,12 +29,17 @@ public class PlayerController : MonoBehaviour
 
     private float jumpForce = 20;
     private float jumpForceMin = 6;
+    private float bufferTime = 0;
+    private float bufferTimeConst = 0.05f;
 
     private bool isGrounded;
     [HideInInspector]
     public bool canJump;
     private bool isPaused;
     private bool isClosingPause;
+    private bool bufferedJump;
+    [HideInInspector]
+    public bool optionsOpen;
 
     private void Awake()
     {
@@ -48,6 +54,22 @@ public class PlayerController : MonoBehaviour
         if(canJump)
         {
             CheckInput();
+        }
+
+        if(bufferedJump)
+        {
+            if(isGrounded)
+            {
+                Jump();
+                bufferedJump = false;
+                bufferTime = 0;
+            }
+            bufferTime -= Time.deltaTime;
+            if(bufferTime < 0)
+            {
+                bufferedJump = false;
+                bufferTime = 0;
+            }
         }
 
         animator.SetFloat("VerticalSpeed", rb.velocity.y);
@@ -72,24 +94,43 @@ public class PlayerController : MonoBehaviour
     // Checks if the player pressed Space for jumping. Called every frame.
     private void CheckInput()
     {
-        if(Input.GetKeyDown(KeyCode.Space) && isGrounded && !isPaused && !isClosingPause)
+        if(!isPaused && !isClosingPause)
         {
-            Jump();
-        }
-        else if(Input.GetKeyUp(KeyCode.Space) && rb.velocity.y > jumpForceMin && !isPaused && !isClosingPause)
-        {
-            rb.velocity = new Vector2(0, jumpForceMin);
-        }
-        else if(Input.GetKeyDown(KeyCode.Escape))
-        {
-            if(isPaused && !isClosingPause)
+            if (Input.GetKeyDown(KeyCode.Space))
             {
-                UnpauseGame();
+                if(isGrounded)
+                {
+                    Jump();
+                }
+                else
+                {
+                    BufferJump();
+                }
             }
-            else if(!isPaused && !isClosingPause)
+            else if (Input.GetKeyUp(KeyCode.Space) && rb.velocity.y > jumpForceMin)
+            {
+                rb.velocity = new Vector2(0, jumpForceMin);
+            }
+            else if(Input.GetKeyDown(KeyCode.Escape))
             {
                 SoundManager.instance.PlaySound(SoundManager.Sound.Peko4);
                 PauseGame();
+            }
+        }
+        else if (isPaused && !isClosingPause)
+        {
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                if(optionsOpen)
+                {
+                    SoundManager.instance.PlaySound(SoundManager.Sound.Click);
+                    optionsPanel.gameObject.SetActive(false);
+                    optionsOpen = false;
+                }
+                else
+                {
+                    UnpauseGame();
+                }
             }
         }
     }
@@ -269,5 +310,11 @@ public class PlayerController : MonoBehaviour
     private void RecedeHighScore()
     {
         LeanTween.scale(highScore, new Vector3(1.5f, 1.5f, 1), .05f);
+    }
+
+    private void BufferJump()
+    {
+        bufferedJump = true;
+        bufferTime = bufferTimeConst;
     }
 }

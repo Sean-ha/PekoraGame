@@ -185,4 +185,18 @@ public class ButtonFunctions : MonoBehaviour
             SceneManager.LoadScene(0);
         }
     }
+
+    public void InGameOpenOptions()
+    {
+        SoundManager.instance.PlaySound(SoundManager.Sound.Click);
+        pc.optionsOpen = true;
+        optionsPanel.gameObject.SetActive(true);
+    }
+
+    public void InGameOptionsExit()
+    {
+        SoundManager.instance.PlaySound(SoundManager.Sound.Click);
+        pc.optionsOpen = false;
+        optionsPanel.gameObject.SetActive(false);
+    }
 }

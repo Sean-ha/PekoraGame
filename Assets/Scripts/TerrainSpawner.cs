@@ -86,7 +86,7 @@ public class TerrainSpawner : MonoBehaviour
         if (!mainMenu)
         {
             InvokeRepeating("IncreaseSpeed", 1, 1);
-            // Invoke("AddBuffNousagi", 30);
+            Invoke("AddBuffNousagi", 40);
         }
         else
         {
@@ -123,7 +123,10 @@ public class TerrainSpawner : MonoBehaviour
 
     private void AddBuffNousagi()
     {
-
+        foreach(GameObject buffPlat in buffNousagiPlatforms)
+        {
+            platforms.Add(buffPlat);
+        }
     }
 
     public float GetMoveSpeed()
