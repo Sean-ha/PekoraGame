@@ -205,7 +205,6 @@ public class PlayerController : MonoBehaviour
         // If the player collides with a corrupt carrot, destroy it and then die.
         else if(collision.gameObject.layer == 10)
         {
-            Destroy(collision.gameObject);
             SoundManager.instance.PlaySound(SoundManager.Sound.CarrotPickUp);
             Die();
         }

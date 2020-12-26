@@ -655,7 +655,7 @@ MonoBehaviour:
 
 
 
-    Thank you-peko for playing!'
+    Thank you for playing-peko!'
 --- !u!222 &188234009
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -789,8 +789,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 1.5, y: 0}
-  m_SizeDelta: {x: 23.720581, y: 0}
+  m_AnchoredPosition: {x: 1.5, y: 7.611603}
+  m_SizeDelta: {x: 23.720581, y: 15.223206}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &235686311
 MonoBehaviour:
@@ -2824,6 +2824,7 @@ GameObject:
   - component: {fileID: 1230247054}
   - component: {fileID: 1230247053}
   - component: {fileID: 1230247052}
+  - component: {fileID: 1230247055}
   m_Layer: 5
   m_Name: TwitterButton
   m_TagString: Untagged
@@ -2892,19 +2893,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1230247053}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1331017280}
-        m_TargetAssemblyTypeName: ButtonFunctions, Assembly-CSharp
-        m_MethodName: OpenTwitterProfile
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &1230247053
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2943,6 +2932,33 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1230247050}
   m_CullTransparentMesh: 0
+--- !u!114 &1230247055
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1230247050}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 91ba5cdffc808cf4389f419d9edc9151, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  OnPress:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1331017280}
+        m_TargetAssemblyTypeName: ButtonFunctions, Assembly-CSharp
+        m_MethodName: OpenTwitterProfile
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &1251166272
 GameObject:
   m_ObjectHideFlags: 0
